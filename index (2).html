@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CPCM Study">
+<title>CPCM Study</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root{--p:#185FA5;--pg:#3B6D11;--bg:#fff;--bg2:#f5f5f5;--bg3:#e8e8e8;--tx:#111;--tx2:#666;--tx3:#999;--bd:rgba(0,0,0,0.1);--r:12px;--sbg:#e8f5e9;--stx:#2e7d32;--dbg:#ffebee;--dtx:#c62828;--wbg:#fff8e1;--wtx:#e65100;--ibg:#e3f2fd;--itx:#1565c0;--safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);}
+@media(prefers-color-scheme:dark){:root{--bg:#0d0d0d;--bg2:#1a1a1a;--bg3:#252525;--tx:#f0f0f0;--tx2:#999;--tx3:#555;--bd:rgba(255,255,255,0.09);--sbg:#1b3a1c;--stx:#66bb6a;--dbg:#3a1212;--dtx:#ef5350;--wbg:#2a1f0a;--wtx:#ffa726;--ibg:#0d2137;--itx:#64b5f6;}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body,#root{height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);font-size:15px;overscroll-behavior:none;}
+button{font-family:inherit;cursor:pointer;background:transparent;border:1px solid var(--bd);border-radius:9px;color:var(--tx);padding:8px 14px;font-size:14px;}
+button:active{opacity:.65;}
+button.pri{background:var(--p);color:#fff;border-color:var(--p);}
+button:disabled{opacity:.4;cursor:default;}
+input,textarea{font-family:inherit;border:1px solid var(--bd);border-radius:11px;padding:11px 13px;font-size:15px;background:var(--bg2);color:var(--tx);width:100%;outline:none;}
+input:focus,textarea:focus{border-color:var(--p);}
+select{font-family:inherit;border:1px solid var(--bd);border-radius:9px;padding:9px 12px;font-size:14px;background:var(--bg2);color:var(--tx);outline:none;width:100%;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);}
+.hdr{display:flex;align-items:center;gap:10px;padding:12px 16px;padding-top:calc(12px + var(--safe-t));border-bottom:1px solid var(--bd);flex-shrink:0;background:var(--bg);}
+.htitle{font-size:16px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.bnav{display:flex;border-top:1px solid var(--bd);flex-shrink:0;background:var(--bg);padding-bottom:var(--safe-b);}
+.bnav button{flex:1;border:none;border-radius:0;padding:9px 2px 7px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;color:var(--tx3);}
+.bnav button.act{color:var(--p);}
+.bnav button i{font-size:20px;}
+.card{border:1px solid var(--bd);border-radius:var(--r);padding:13px 14px;margin-bottom:10px;}
+.pill{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:3px 8px;border-radius:20px;}
+.pill.ok{background:var(--sbg);color:var(--stx);}
+.pill.warn{background:var(--wbg);color:var(--wtx);}
+.tabbar{display:flex;border-bottom:1px solid var(--bd);flex-shrink:0;overflow-x:auto;scrollbar-width:none;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tabbar button{flex-shrink:0;border:none;border-radius:0;padding:11px 14px;font-size:13px;color:var(--tx2);border-bottom:2.5px solid transparent;}
+.tabbar button.act{color:var(--tx);border-bottom-color:var(--p);font-weight:500;}
+.lrow{display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid var(--bd);cursor:pointer;}
+.lrow:active{background:var(--bg2);}
+.orow{display:flex;gap:8px;padding:9px 11px;border-radius:9px;border:1px solid var(--bd);margin-bottom:5px;font-size:14px;cursor:pointer;}
+.vplayer{background:#0d1117;position:relative;padding:26px 20px 30px;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.vpbar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.1);}
+.bub{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.6;}
+.bub.u{background:var(--ibg);color:var(--itx);border-bottom-right-radius:3px;align-self:flex-end;}
+.bub.a{background:var(--bg2);color:var(--tx);border-bottom-left-radius:3px;}
+.spin{padding:44px 20px;text-align:center;color:var(--tx2);}
+.btr{height:5px;background:var(--bg3);border-radius:3px;}
+.bfl{height:5px;border-radius:3px;transition:width .4s;}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.stat-box{background:var(--bg2);border-radius:var(--r);padding:13px;text-align:center;}
+.stat-num{font-size:26px;font-weight:700;margin-bottom:2px;}
+.stat-lbl{font-size:11px;color:var(--tx2);}
+.fc-wrap{perspective:1000px;width:100%;max-width:360px;margin:0 auto 20px;}
+.fc{width:100%;min-height:200px;position:relative;transform-style:preserve-3d;transition:transform .5s;}
+.fc.flip{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;border:1px solid var(--bd);}
+.fc-back{transform:rotateY(180deg);background:var(--ibg);}
+.timer-ring{position:relative;width:60px;height:60px;flex-shrink:0;}
+.timer-svg{transform:rotate(-90deg);}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback}=React;
+
+const MODS=[
+  {id:"m1",n:"1.0",title:"Leadership",color:"#185FA5",bg:"#dce8f7",
+   ls:[{id:"l11",t:"Character & Professional Standards",m:12},{id:"l12",t:"Emotional Intelligence",m:10},{id:"l13",t:"Communication & Documentation",m:14},{id:"l14",t:"Leadership Styles & Theory",m:11},{id:"l15",t:"Conflict Resolution & Decision-Making",m:13}]},
+  {id:"m2",n:"2.0",title:"Management",color:"#3B6D11",bg:"#e3f0d3",
+   ls:[{id:"l21",t:"Strategic Planning & Goal Setting",m:12},{id:"l22",t:"Team Building & Organizational Capability",m:11},{id:"l23",t:"Technology & Data Management",m:10},{id:"l24",t:"Category Management",m:13},{id:"l25",t:"Performance Metrics & Continuous Improvement",m:10}]},
+  {id:"m3",n:"3.0",title:"Guiding Principles",color:"#533489",bg:"#eae6f7",
+   ls:[{id:"l31",t:"Common Law vs. UCC Framework",m:15},{id:"l32",t:"Contract Formation Elements",m:14},{id:"l33",t:"Ethics & NCMA Code of Ethics",m:11},{id:"l34",t:"FAR & Regulatory Framework",m:13},{id:"l35",t:"Risk Management Principles",m:12},{id:"l36",t:"Sustainable Procurement",m:9}]},
+  {id:"m4",n:"4.0",title:"Pre-Award",color:"#854F0B",bg:"#f5e8d4",
+   ls:[{id:"l41",t:"Acquisition Planning & Market Research",m:14},{id:"l42",t:"Requirements: SOW, SOO & PWS",m:13},{id:"l43",t:"Solicitation Types: RFP, IFB, RFQ",m:12},{id:"l44",t:"Source Selection Methods",m:14},{id:"l45",t:"Small Business Programs",m:11},{id:"l46",t:"Proposal Management & Evaluation",m:12}]},
+  {id:"m5",n:"5.0",title:"Award",color:"#993C1D",bg:"#f5e4db",
+   ls:[{id:"l51",t:"Contract Types & Risk Allocation",m:16},{id:"l52",t:"Pricing Methods & Cost Analysis",m:18},{id:"l53",t:"Contract Negotiation",m:14},{id:"l54",t:"Contract Formation & Execution",m:12},{id:"l55",t:"Socioeconomic Requirements at Award",m:10}]},
+  {id:"m6",n:"6.0",title:"Post-Award",color:"#0F6E56",bg:"#d4ede5",
+   ls:[{id:"l61",t:"Contract Administration & COR Duties",m:13},{id:"l62",t:"Contract Changes & Modifications",m:14},{id:"l63",t:"Claims, Disputes & Contract Disputes Act",m:15},{id:"l64",t:"Earned Value Management",m:14},{id:"l65",t:"Contract Closeout & Termination",m:12}]},
+  {id:"m7",n:"7.0",title:"Learn",color:"#5F5E5A",bg:"#eae9e3",
+   ls:[{id:"l71",t:"Professional Development & CPE",m:8},{id:"l72",t:"Best Practices & Knowledge Management",m:9},{id:"l73",t:"Certification & Career Path",m:8}]},
+];
+const TOTAL=MODS.reduce((a,m)=>a+m.ls.length,0);
+
+function pj(t){return JSON.parse(t.replace(/```json|```/g,"").trim());}
+function ls(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch{return null;}}
+function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+async function ai(key,msgs,sys){
+  const body={model:"claude-sonnet-4-5",max_tokens:1000,messages:msgs};
+  if(sys)body.system=sys;
+  const eps=[
+    {url:"https://api.anthropic.com/v1/messages",h:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"}},
+    {url:"https://corsproxy.io/?https://api.anthropic.com/v1/messages",h:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"}},
+  ];
+  let lastErr="";
+  for(const ep of eps){
+    try{
+      const r=await fetch(ep.url,{method:"POST",headers:ep.h,body:JSON.stringify(body)});
+      const d=await r.json();
+      if(d.error)throw new Error(d.error.message||"API error");
+      return d.content?.filter(c=>c.type==="text").map(c=>c.text).join("")||"";
+    }catch(e){lastErr=e.message;continue;}
+  }
+  throw new Error(lastErr||"Network error");
+}
+
+function Spin({msg="Generating with AI…"}){
+  return <div className="spin"><i className="ti ti-loader-2" style={{fontSize:28,display:"block",marginBottom:8,color:"var(--tx3)"}}/><div style={{fontSize:13}}>{msg}</div><div style={{fontSize:11,color:"var(--tx3)",marginTop:4}}>CMBOK 7th Edition</div></div>;
+}
+
+function BNav({act,nav}){
+  const items=[["home","ti-books","Courses"],["cards","ti-cards","Flashcards"],["exam","ti-writing","Mock Exam"],["tutor","ti-robot","AI Tutor"],["settings","ti-settings","Settings"]];
+  return <div className="bnav">{items.map(([s,ic,lb])=>(
+    <button key={s} className={act===s?"act":""} onClick={()=>nav(s)}>
+      <i className={"ti "+ic}/>{lb}
+    </button>
+  ))}</div>;
+}
+
+/* ── KEY SCREEN ── */
+function KeyScreen({onSave}){
+  const [k,setK]=useState("");const [err,setErr]=useState("");const [ld,setLd]=useState(false);
+  const go=async()=>{
+    const key=k.trim();if(!key){setErr("Paste your API key");return;}
+    setLd(true);setErr("");
+    try{await ai(key,[{role:"user",content:"hi"}]);onSave(key);}
+    catch(e){setErr("Key error: "+e.message);}
+    setLd(false);
+  };
+  return <div className="screen" style={{justifyContent:"center",padding:"32px 24px",gap:20}}>
+    <div style={{textAlign:"center"}}>
+      <div style={{fontSize:52,marginBottom:12}}>📋</div>
+      <div style={{fontSize:24,fontWeight:700,marginBottom:6}}>CPCM Study</div>
+      <div style={{fontSize:14,color:"var(--tx2)",lineHeight:1.7}}>CMBOK 7th Edition · 34 lessons<br/>Flashcards · Mock Exam · AI Tutor · CPE Tracker</div>
+    </div>
+    <div className="card" style={{margin:0}}>
+      <div style={{fontSize:14,fontWeight:600,marginBottom:4}}>Anthropic API Key</div>
+      <div style={{fontSize:12,color:"var(--tx2)",marginBottom:10,lineHeight:1.5}}>Get a free key at <strong>console.anthropic.com</strong> — stored only on your device.</div>
+      <input type="password" placeholder="sk-ant-api03-…" value={k} onChange={e=>setK(e.target.value)} onKeyDown={e=>e.key==="Enter"&&go()}/>
+      {err&&<div style={{fontSize:12,color:"var(--dtx)",marginTop:6}}>{err}</div>}
+      <button className="pri" onClick={go} disabled={ld} style={{width:"100%",marginTop:10,padding:13,fontSize:15,borderRadius:11}}>{ld?"Checking…":"Get Started →"}</button>
+    </div>
+  </div>;
+}
+
+/* ── HOME SCREEN ── */
+function HomeScreen({prog,onMod,nav,apiKey}){
+  const done=Object.keys(prog).length;const pct=Math.round(done/TOTAL*100);
+  const examDate=ls("cpcm_exam_date");
+  const daysLeft=examDate?Math.max(0,Math.ceil((new Date(examDate)-new Date())/(1000*60*60*24))):null;
+  const streak=ls("cpcm_streak")||0;
+  const cpeHours=ls("cpcm_cpe")||[];
+  const totalCPE=cpeHours.reduce((a,c)=>a+(c.hours||0),0);
+  const weakMods=MODS.map(m=>({...m,pct:Math.round(m.ls.filter(l=>prog[l.id]).length/m.ls.length*100)})).sort((a,b)=>a.pct-b.pct).slice(0,2);
+
+  return <div className="screen">
+    <div className="hdr"><div className="htitle">CPCM Study</div>
+      {daysLeft!==null&&<span style={{fontSize:12,background:"var(--wbg)",color:"var(--wtx)",padding:"3px 8px",borderRadius:20,fontWeight:500}}>{daysLeft}d to exam</span>}
+    </div>
+    <div className="scroll" style={{padding:"14px 14px 20px"}}>
+
+      {/* Stats row */}
+      <div className="stat-grid">
+        <div className="stat-box">
+          <div className="stat-num" style={{color:"var(--pg)"}}>{pct}%</div>
+          <div className="stat-lbl">Course complete</div>
+        </div>
+        <div className="stat-box">
+          <div className="stat-num" style={{color:"var(--p)"}}>{streak}</div>
+          <div className="stat-lbl">Day streak 🔥</div>
+        </div>
+        <div className="stat-box">
+          <div className="stat-num" style={{color:"var(--wtx)"}}>{Math.round(totalCPE)}</div>
+          <div className="stat-lbl">CPE hours / 120</div>
+        </div>
+        <div className="stat-box">
+          <div className="stat-num" style={{color:"var(--tx)"}}>{done}</div>
+          <div className="stat-lbl">Lessons done</div>
+        </div>
+      </div>
+
+      {/* Exam countdown setup */}
+      {!examDate&&<div className="card" style={{background:"var(--ibg)",border:"1px solid var(--itx)",marginBottom:14}}>
+        <div style={{fontSize:13,fontWeight:600,color:"var(--itx)",marginBottom:6}}>📅 Set your exam date</div>
+        <div style={{fontSize:12,color:"var(--itx)",marginBottom:8}}>Track your countdown and get a personalized study plan.</div>
+        <input type="date" style={{fontSize:13,padding:"8px 10px"}} onChange={e=>{ss("cpcm_exam_date",e.target.value);window.location.reload();}}/>
+      </div>}
+
+      {/* Overall progress */}
+      <div className="card" style={{background:"var(--bg2)"}}>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+          <span style={{fontSize:13,fontWeight:500}}>Overall progress</span>
+          <span style={{fontSize:12,color:"var(--tx2)"}}>{done}/{TOTAL} lessons</span>
+        </div>
+        <div className="btr"><div className="bfl" style={{width:pct+"%",background:"var(--pg)"}}/></div>
+        {daysLeft!==null&&<div style={{fontSize:11,color:"var(--tx2)",marginTop:6}}>At current pace: {Math.round((TOTAL-done)/(Math.max(1,done)||1)*7)} more weeks to complete</div>}
+      </div>
+
+      {/* Weak areas */}
+      {weakMods[0]&&weakMods[0].pct<80&&<div className="card">
+        <div style={{fontSize:13,fontWeight:600,marginBottom:8}}>⚠️ Focus areas</div>
+        {weakMods.map(m=>(
+          <div key={m.id} onClick={()=>onMod(m)} style={{display:"flex",alignItems:"center",gap:10,padding:"7px 0",borderBottom:"1px solid var(--bd)",cursor:"pointer"}}>
+            <span style={{width:8,height:8,borderRadius:"50%",background:m.color,flexShrink:0}}/>
+            <span style={{flex:1,fontSize:13}}>{m.n} {m.title}</span>
+            <span style={{fontSize:11,color:m.pct<30?"var(--dtx)":"var(--wtx)",fontWeight:500}}>{m.pct}%</span>
+          </div>
+        ))}
+        <div style={{fontSize:11,color:"var(--tx2)",marginTop:6}}>Tap to go to module</div>
+      </div>}
+
+      {/* Quick actions */}
+      <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",margin:"4px 0 10px"}}>QUICK ACTIONS</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
+        {[["🃏 Flashcards","Test your recall","cards"],["📝 Mock Exam","Timed practice","exam"],["🤖 Ask Tutor","Any CMBOK Q","tutor"],["📊 CPE Log","Track 120 hours","settings"]].map(([t,s,sc])=>(
+          <div key={sc} className="card" onClick={()=>nav(sc)} style={{cursor:"pointer",padding:"11px 12px",margin:0}}>
+            <div style={{fontSize:20,marginBottom:4}}>{t.split(" ")[0]}</div>
+            <div style={{fontSize:13,fontWeight:500}}>{t.split(" ").slice(1).join(" ")}</div>
+            <div style={{fontSize:11,color:"var(--tx2)"}}>{s}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Modules */}
+      <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",marginBottom:10}}>7 COMPETENCIES</div>
+      {MODS.map(m=>{
+        const md=m.ls.filter(l=>prog[l.id]).length;
+        return <div key={m.id} className="card" onClick={()=>onMod(m)} style={{cursor:"pointer",padding:"13px 14px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:40,height:40,borderRadius:11,background:m.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <span style={{fontSize:12,fontWeight:700,color:m.color}}>{m.n}</span>
+            </div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:15,fontWeight:600,marginBottom:3}}>{m.title}</div>
+              <div className="btr" style={{marginBottom:3}}><div className="bfl" style={{width:(md/m.ls.length*100)+"%",background:m.color}}/></div>
+              <div style={{fontSize:11,color:"var(--tx2)"}}>{md}/{m.ls.length} lessons</div>
+            </div>
+            <i className="ti ti-chevron-right" style={{color:"var(--tx3)",fontSize:18}}/>
+          </div>
+        </div>;
+      })}
+    </div>
+    <BNav act="home" nav={nav}/>
+  </div>;
+}
+
+/* ── MODULE SCREEN ── */
+function ModScreen({mod,prog,onL,onBack,nav}){
+  return <div className="screen">
+    <div className="hdr">
+      <button onClick={onBack} style={{border:"none",padding:"4px 10px 4px 0"}}><i className="ti ti-arrow-left" style={{fontSize:22}}/></button>
+      <div style={{width:32,height:32,borderRadius:9,background:mod.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+        <span style={{fontSize:11,fontWeight:700,color:mod.color}}>{mod.n}</span>
+      </div>
+      <div className="htitle">{mod.title}</div>
+    </div>
+    <div className="scroll">
+      {mod.ls.map(l=>(
+        <div key={l.id} className="lrow" onClick={()=>onL(l,mod)}>
+          {prog[l.id]?<i className="ti ti-circle-check" style={{fontSize:21,color:"var(--pg)",flexShrink:0}}/>:<i className="ti ti-circle" style={{fontSize:21,color:"var(--tx3)",flexShrink:0}}/>}
+          <div style={{flex:1}}><div style={{fontSize:14,fontWeight:500,marginBottom:2}}>{l.t}</div><div style={{fontSize:12,color:"var(--tx2)"}}>{l.m} min</div></div>
+          <i className="ti ti-chevron-right" style={{color:"var(--tx3)",fontSize:16}}/>
+        </div>
+      ))}
+    </div>
+    <BNav act="home" nav={nav}/>
+  </div>;
+}
+
+/* ── LESSON TABS ── */
+function LearnTab({data,ld,mod,retry}){
+  if(ld)return <Spin/>;
+  if(!data)return <Spin/>;
+  if(data.err)return <div style={{padding:24,textAlign:"center"}}><div style={{color:"var(--dtx)",fontSize:13,marginBottom:12}}>{data.err}</div><button onClick={retry} className="pri">Retry</button></div>;
+  return <div style={{padding:"14px 14px 30px"}}>
+    <div style={{padding:"12px 13px",background:"var(--bg2)",borderRadius:11,marginBottom:14,fontSize:14,lineHeight:1.7}}>{data.ov}</div>
+    <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",marginBottom:9}}>KEY CONCEPTS</div>
+    {data.kp?.map((k,i)=>(
+      <div key={i} className="card" style={{borderLeft:"3px solid "+mod.color,borderRadius:"0 11px 11px 0"}}>
+        <div style={{fontSize:14,fontWeight:600,marginBottom:3}}>{k.h}</div>
+        <div style={{fontSize:13,color:"var(--tx2)",lineHeight:1.6}}>{k.c}</div>
+      </div>
+    ))}
+    <div style={{padding:"12px 14px",background:mod.bg,borderRadius:11,marginTop:4}}>
+      <div style={{fontSize:11,fontWeight:600,color:mod.color,letterSpacing:"0.8px",marginBottom:8}}>EXAM TIPS</div>
+      {data.et?.map((t,i)=>(
+        <div key={i} style={{fontSize:13,padding:"3px 0 3px 14px",position:"relative",lineHeight:1.5}}>
+          <span style={{position:"absolute",left:0,color:mod.color}}>→</span>{t}
+        </div>
+      ))}
+    </div>
+    <div style={{marginTop:12,fontSize:12,color:"var(--tx2)",fontStyle:"italic",paddingTop:10,borderTop:"1px solid var(--bd)"}}>{data.su}</div>
+  </div>;
+}
+
+function AudioTab({data,ld,mod,synth}){
+  const [playing,setPlaying]=useState(false);const [spd,setSpd]=useState(1);
+  const bt=d=>`Overview. ${d.ov} ${d.kp?.map(k=>k.h+". "+k.c).join(" ")} Summary: ${d.su}`;
+  const tog=()=>{
+    if(!data||data.err)return;
+    if(playing){synth.current?.cancel();setPlaying(false);return;}
+    synth.current?.cancel();
+    const u=new SpeechSynthesisUtterance(bt(data));u.rate=spd;
+    u.onstart=()=>setPlaying(true);u.onend=()=>setPlaying(false);u.onerror=()=>setPlaying(false);
+    synth.current?.speak(u);
+  };
+  if(ld)return <Spin/>;
+  if(!data||data.err)return <div style={{padding:24,textAlign:"center",fontSize:13,color:"var(--tx2)"}}>Load lesson first.</div>;
+  return <div style={{padding:"16px 14px 30px"}}>
+    <div style={{background:"var(--bg2)",borderRadius:14,padding:"22px 16px",textAlign:"center",marginBottom:16}}>
+      <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",marginBottom:14}}>AUDIO LESSON</div>
+      <div style={{display:"flex",alignItems:"flex-end",justifyContent:"center",gap:3,height:44,marginBottom:18}}>
+        {[8,14,22,18,10,28,20,14,24,9,17,12,20,26,10].map((h,i)=>(
+          <div key={i} style={{width:4,borderRadius:3,background:playing?mod.color:"var(--bg3)",height:(playing?h:3)+"px",transition:"height .35s ease",transitionDelay:(i*.03)+"s"}}/>
+        ))}
+      </div>
+      <button className="pri" onClick={tog} style={{padding:"13px 30px",fontSize:16,borderRadius:26,marginBottom:16,display:"inline-flex",alignItems:"center",gap:8,background:mod.color,borderColor:mod.color,minWidth:180}}>
+        <i className={"ti ti-player-"+(playing?"pause":"play")} style={{fontSize:19}}/>{playing?"Pause":"Play Lesson"}
+      </button>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+        <span style={{fontSize:12,color:"var(--tx2)"}}>Speed:</span>
+        {[0.75,1,1.25,1.5].map(s=>(
+          <button key={s} onClick={()=>{setSpd(s);if(playing){synth.current?.cancel();setPlaying(false);}}} style={{padding:"5px 9px",fontSize:12,background:spd===s?mod.bg:"transparent",color:spd===s?mod.color:"var(--tx2)",borderColor:spd===s?mod.color:"var(--bd)"}}>{s}×</button>
+        ))}
+      </div>
+    </div>
+    <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",marginBottom:9}}>TRANSCRIPT</div>
+    <div style={{fontSize:13,lineHeight:1.85,color:"var(--tx2)",padding:"13px 14px",border:"1px solid var(--bd)",borderRadius:11}}>
+      <p style={{marginBottom:10}}><strong style={{color:"var(--tx)"}}>Overview.</strong> {data.ov}</p>
+      {data.kp?.map((k,i)=><p key={i} style={{marginBottom:10}}><strong style={{color:"var(--tx)"}}>{k.h}.</strong> {k.c}</p>)}
+      <p style={{fontStyle:"italic"}}>{data.su}</p>
+    </div>
+  </div>;
+}
+
+function VideoTab({data,ld,mod,synth}){
+  const [sl,setSl]=useState(0);const [pl,setPl]=useState(false);const [spd,setSpd]=useState(1);
+  useEffect(()=>{synth.current?.cancel();setSl(0);setPl(false);},[data]);
+  const slides=data?.sl||[];const cur=slides[sl]||{};const pct=slides.length?Math.round((sl+1)/slides.length*100):0;
+  const pf=idx=>{
+    if(!slides.length||idx>=slides.length){setPl(false);return;}
+    synth.current?.cancel();
+    const s=slides[idx];const txt=s.n||(s.t+". "+(s.b||[]).join(". "));
+    const u=new SpeechSynthesisUtterance(txt);u.rate=spd;
+    u.onstart=()=>{setSl(idx);setPl(true);};u.onend=()=>pf(idx+1);u.onerror=()=>setPl(false);
+    synth.current?.speak(u);
+  };
+  const tog=()=>{if(pl){synth.current?.cancel();setPl(false);}else pf(sl);};
+  const nav=i=>{synth.current?.cancel();setPl(false);setSl(Math.max(0,Math.min(slides.length-1,i)));};
+  if(ld)return <Spin/>;
+  if(!data||data.err)return <div style={{padding:24,textAlign:"center",fontSize:13,color:"var(--tx2)"}}>Load lesson first.</div>;
+  return <div style={{paddingBottom:30}}>
+    <div className="vplayer">
+      <div style={{position:"absolute",top:10,right:13,fontSize:11,color:"rgba(255,255,255,0.35)"}}>{sl+1}/{slides.length}</div>
+      <div style={{position:"absolute",top:10,left:13,fontSize:10,color:mod.color,fontWeight:700,letterSpacing:"0.8px"}}>{mod.n} {mod.title}</div>
+      <div style={{textAlign:"center",maxWidth:340,width:"100%",zIndex:1}}>
+        <div style={{fontSize:16,fontWeight:600,color:"#fff",marginBottom:16,lineHeight:1.5}}>{cur.t||"—"}</div>
+        {(cur.b||[]).map((b,i)=>(
+          <div key={i} style={{fontSize:13,color:"rgba(255,255,255,0.72)",padding:"5px 0 5px 15px",textAlign:"left",display:"flex",gap:8,borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+            <span style={{color:mod.color,flexShrink:0,fontSize:9,marginTop:4}}>▶</span>{b}
+          </div>
+        ))}
+      </div>
+      <div className="vpbar"><div style={{height:3,background:mod.color,width:pct+"%",transition:"width .5s"}}/></div>
+    </div>
+    <div style={{display:"flex",alignItems:"center",gap:8,padding:"12px 14px",borderBottom:"1px solid var(--bd)"}}>
+      <button onClick={()=>nav(sl-1)} style={{padding:"10px 13px"}}><i className="ti ti-player-skip-back" style={{fontSize:20}}/></button>
+      <button className="pri" onClick={tog} style={{flex:1,padding:11,fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:7,background:mod.color,borderColor:mod.color}}>
+        <i className={"ti ti-player-"+(pl?"pause":"play")} style={{fontSize:18}}/>{pl?"Pause":"Play"}
+      </button>
+      <button onClick={()=>nav(sl+1)} style={{padding:"10px 13px"}}><i className="ti ti-player-skip-forward" style={{fontSize:20}}/></button>
+    </div>
+    <div style={{padding:"12px 14px"}}>
+      <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",marginBottom:10}}>CHAPTERS</div>
+      {slides.map((s,i)=>(
+        <div key={i} onClick={()=>nav(i)} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:"1px solid var(--bd)",cursor:"pointer"}}>
+          <div style={{width:24,height:24,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:600,flexShrink:0,background:i===sl?mod.color:"var(--bg2)",color:i===sl?"#fff":"var(--tx2)"}}>{i+1}</div>
+          <span style={{fontSize:13,color:i===sl?"var(--tx)":"var(--tx2)",flex:1}}>{s.t}</span>
+          {i===sl&&pl&&<span style={{fontSize:11,color:mod.color}}>▶</span>}
+        </div>
+      ))}
+    </div>
+  </div>;
+}
+
+function QuizTab({lesson,mod,apiKey,qc,setQc}){
+  const [ld,setLd]=useState(false);const [ans,setAns]=useState({});
+  useEffect(()=>setAns({}),[lesson.id]);
+  const load=async()=>{
+    setLd(true);
+    try{const raw=await ai(apiKey,[{role:"user",content:`5 CPCM exam MCQs on "${lesson.t}" (CMBOK 7th Ed. ${mod.n}). ONLY JSON: [{"q":"Q","o":["A","B","C","D"],"a":0,"e":"why"}] 0-indexed answer.`}]);setQc(pj(raw));}
+    catch{setQc([]);}setLd(false);
+  };
+  if(!qc&&!ld)return <div style={{padding:32,textAlign:"center"}}><div style={{fontSize:14,color:"var(--tx2)",marginBottom:14}}>Practice questions for this lesson</div><button className="pri" onClick={load} style={{padding:"13px 26px",fontSize:15,borderRadius:26,display:"inline-flex",alignItems:"center",gap:8}}><i className="ti ti-sparkles" style={{fontSize:19}}/>Generate Quiz</button></div>;
+  if(ld)return <Spin msg="Generating questions…"/>;
+  if(!qc||!qc.length)return <div style={{padding:24,textAlign:"center",fontSize:13,color:"var(--tx2)"}}>Failed. <button onClick={load} className="pri">Retry</button></div>;
+  const done=Object.keys(ans).length;const score=qc.filter((_,i)=>ans[i]===qc[i].a).length;
+  return <div style={{padding:"14px 14px 30px"}}>
+    {done===qc.length&&<div style={{padding:"11px 14px",borderRadius:11,marginBottom:14,fontSize:14,background:score>=4?"var(--sbg)":"var(--wbg)",color:score>=4?"var(--stx)":"var(--wtx)"}}>Score: {score}/5 — {score===5?"Perfect! 🎉":score>=4?"Great!":score>=3?"Good — review explanations.":"Review this lesson."}</div>}
+    {qc.map((q,qi)=>{
+      const chosen=ans[qi];const answered=chosen!==undefined;
+      return <div key={qi} className="card" style={{padding:"14px",marginBottom:12}}>
+        <div style={{fontSize:14,fontWeight:500,marginBottom:11,lineHeight:1.5}}>Q{qi+1}. {q.q}</div>
+        {q.o.map((opt,oi)=>{
+          let bg="transparent",cl="var(--tx2)",bd="var(--bd)";
+          if(answered){if(oi===q.a){bg="var(--sbg)";cl="var(--stx)";bd="var(--stx)";}else if(oi===chosen){bg="var(--dbg)";cl="var(--dtx)";bd="var(--dtx)";}}
+          return <div key={oi} onClick={()=>{if(!answered)setAns(a=>({...a,[qi]:oi}));}} className="orow" style={{background:bg,color:cl,borderColor:bd}}>
+            <span style={{fontWeight:700,flexShrink:0}}>{String.fromCharCode(65+oi)}.</span>{opt}
+          </div>;
+        })}
+        {answered&&<div style={{marginTop:9,padding:"9px 11px",background:"var(--bg2)",borderRadius:9,fontSize:13,color:"var(--tx2)",lineHeight:1.5}}><strong style={{color:"var(--tx)"}}>Why: </strong>{q.e}</div>}
+      </div>;
+    })}
+    {done===qc.length&&<button onClick={()=>{setAns({});setQc(null);setTimeout(load,100);}} style={{display:"flex",alignItems:"center",gap:7,padding:"11px 16px",fontSize:14}}><i className="ti ti-refresh" style={{fontSize:17}}/>New questions</button>}
+  </div>;
+}
+
+/* ── LESSON SCREEN ── */
+function LsnScreen({lesson,mod,apiKey,prog,onDone,onBack,nav}){
+  const [tab,setTab]=useState("learn");const [data,setData]=useState(null);const [ld,setLd]=useState(false);const [qc,setQc]=useState(null);
+  const synth=useRef(window.speechSynthesis||null);
+  useEffect(()=>{load();return()=>synth.current?.cancel();},[lesson.id]);
+  const load=async()=>{
+    const c=ls("lc:"+lesson.id);if(c){setData(c);return;}
+    setLd(true);
+    try{
+      const raw=await ai(apiKey,[{role:"user",content:`CPCM lesson "${lesson.t}" CMBOK 7th Ed. ${mod.n}. ONLY valid JSON no markdown: {"ov":"2-sentence overview","kp":[{"h":"heading","c":"2-3 sentence explanation"}],"sl":[{"t":"slide title","b":["b1","b2","b3"],"n":"70-word narration"}],"et":["tip1","tip2","tip3"],"su":"1-sentence summary"} 6 kp, 5 sl, 3 et.`}]);
+      const d=pj(raw);setData(d);ss("lc:"+lesson.id,d);
+    }catch(e){setData({err:e.message});}setLd(false);
+  };
+  // Update streak
+  useEffect(()=>{
+    const today=new Date().toDateString();const last=ls("cpcm_last_study");
+    const streak=ls("cpcm_streak")||0;
+    if(last!==today){ss("cpcm_last_study",today);ss("cpcm_streak",last===new Date(Date.now()-86400000).toDateString()?streak+1:1);}
+  },[]);
+  return <div className="screen">
+    <div className="hdr">
+      <button onClick={()=>{synth.current?.cancel();onBack();}} style={{border:"none",padding:"4px 10px 4px 0"}}><i className="ti ti-arrow-left" style={{fontSize:22}}/></button>
+      <div className="htitle" style={{fontSize:13,fontWeight:500}}>{lesson.t}</div>
+      {prog[lesson.id]?<span className="pill ok"><i className="ti ti-check" style={{fontSize:11,marginRight:2}}/>Done</span>:<button onClick={onDone} style={{fontSize:12,padding:"4px 10px",borderRadius:20,flexShrink:0}}>Mark done</button>}
+    </div>
+    <div className="tabbar">
+      {[["learn","📖 Learn"],["audio","🔊 Audio"],["video","🎬 Video"],["quiz","📝 Quiz"]].map(([k,lb])=>(
+        <button key={k} className={tab===k?"act":""} onClick={()=>{synth.current?.cancel();setTab(k);}}>{lb}</button>
+      ))}
+    </div>
+    <div className="scroll">
+      {tab==="learn"&&<LearnTab data={data} ld={ld} mod={mod} retry={load}/>}
+      {tab==="audio"&&<AudioTab data={data} ld={ld} mod={mod} synth={synth}/>}
+      {tab==="video"&&<VideoTab data={data} ld={ld} mod={mod} synth={synth}/>}
+      {tab==="quiz"&&<QuizTab lesson={lesson} mod={mod} apiKey={apiKey} qc={qc} setQc={setQc}/>}
+    </div>
+    <BNav act="home" nav={nav}/>
+  </div>;
+}
+
+/* ── FLASHCARDS SCREEN ── */
+function CardsScreen({apiKey,nav}){
+  const [selMod,setSelMod]=useState(null);const [cards,setCards]=useState(null);const [ld,setLd]=useState(false);
+  const [idx,setIdx]=useState(0);const [flipped,setFlipped]=useState(false);const [known,setKnown]=useState([]);const [unknown,setUnknown]=useState([]);
+
+  const load=async(mod)=>{
+    setSelMod(mod);setCards(null);setIdx(0);setFlipped(false);setKnown([]);setUnknown([]);
+    const cacheKey="fc:"+mod.id;const cached=ls(cacheKey);
+    if(cached){setCards(cached);return;}
+    setLd(true);
+    try{
+      const raw=await ai(apiKey,[{role:"user",content:`10 CPCM flashcards for CMBOK 7th Ed. ${mod.n} ${mod.title}. ONLY JSON: [{"f":"front - term or question (max 12 words)","b":"back - definition or answer (max 40 words)"}] No markdown.`}]);
+      const d=pj(raw);setCards(d);ss(cacheKey,d);
+    }catch{setCards([]);}setLd(false);
+  };
+
+  const next=(isKnown)=>{
+    if(!cards)return;
+    if(isKnown)setKnown(p=>[...p,idx]);else setUnknown(p=>[...p,idx]);
+    setFlipped(false);
+    setTimeout(()=>{
+      if(idx+1>=cards.length){setIdx(-1);}// done
+      else setIdx(i=>i+1);
+    },200);
+  };
+
+  const restart=()=>{setIdx(0);setFlipped(false);setKnown([]);setUnknown([]);};
+
+  if(!selMod)return <div className="screen">
+    <div className="hdr"><div className="htitle">Flashcards</div></div>
+    <div className="scroll" style={{padding:"14px 14px 20px"}}>
+      <div style={{fontSize:13,color:"var(--tx2)",marginBottom:14}}>Pick a competency to study:</div>
+      {MODS.map(m=>(
+        <div key={m.id} className="card" onClick={()=>load(m)} style={{cursor:"pointer",display:"flex",alignItems:"center",gap:12}}>
+          <div style={{width:38,height:38,borderRadius:10,background:m.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <span style={{fontSize:12,fontWeight:700,color:m.color}}>{m.n}</span>
+          </div>
+          <div style={{flex:1}}><div style={{fontSize:14,fontWeight:500}}>{m.title}</div><div style={{fontSize:11,color:"var(--tx2)"}}>10 AI flashcards</div></div>
+          <i className="ti ti-chevron-right" style={{color:"var(--tx3)",fontSize:18}}/>
+        </div>
+      ))}
+    </div>
+    <BNav act="cards" nav={nav}/>
+  </div>;
+
+  if(ld)return <div className="screen"><div className="hdr"><div className="htitle">Flashcards</div></div><Spin msg="Generating flashcards…"/><BNav act="cards" nav={nav}/></div>;
+
+  if(!cards||!cards.length)return <div className="screen">
+    <div className="hdr"><button onClick={()=>setSelMod(null)} style={{border:"none",padding:"4px 10px 4px 0"}}><i className="ti ti-arrow-left" style={{fontSize:22}}/></button><div className="htitle">{selMod.title}</div></div>
+    <div style={{padding:32,textAlign:"center",fontSize:13,color:"var(--tx2)"}}>Failed to load. <button className="pri" onClick={()=>load(selMod)}>Retry</button></div>
+    <BNav act="cards" nav={nav}/>
+  </div>;
+
+  // Done screen
+  if(idx===-1)return <div className="screen">
+    <div className="hdr"><button onClick={()=>setSelMod(null)} style={{border:"none",padding:"4px 10px 4px 0"}}><i className="ti ti-arrow-left" style={{fontSize:22}}/></button><div className="htitle">{selMod.title}</div></div>
+    <div className="scroll" style={{padding:"40px 24px",textAlign:"center"}}>
+      <div style={{fontSize:48,marginBottom:16}}>🎉</div>
+      <div style={{fontSize:20,fontWeight:700,marginBottom:8}}>Deck complete!</div>
+      <div style={{fontSize:14,color:"var(--tx2)",marginBottom:24}}>You knew <strong style={{color:"var(--stx)"}}>{known.length}</strong> · Still learning <strong style={{color:"var(--dtx)"}}>{unknown.length}</strong></div>
+      <div className="stat-grid" style={{maxWidth:280,margin:"0 auto 24px"}}>
+        <div className="stat-box"><div className="stat-num" style={{color:"var(--stx)"}}>{known.length}</div><div className="stat-lbl">Known ✓</div></div>
+        <div className="stat-box"><div className="stat-num" style={{color:"var(--dtx)"}}>{unknown.length}</div><div className="stat-lbl">Review</div></div>
+      </div>
+      <button className="pri" onClick={restart} style={{padding:"12px 28px",fontSize:15,borderRadius:24,marginRight:10}}>Restart deck</button>
+      <button onClick={()=>setSelMod(null)} style={{padding:"12px 20px",fontSize:14,borderRadius:24}}>Pick another</button>
+    </div>
+    <BNav act="cards" nav={nav}/>
+  </div>;
+
+  const card=cards[idx];
+  const progress=Math.round((idx/cards.length)*100);
+
+  return <div className="screen">
+    <div className="hdr">
+      <button onClick={()=>setSelMod(null)} style={{border:"none",padding:"4px 10px 4px 0"}}><i className="ti ti-arrow-left" style={{fontSize:22}}/></button>
+      <div className="htitle">{selMod.title}</div>
+      <span style={{fontSize:12,color:"var(--tx2)"}}>{idx+1}/{cards.length}</span>
+    </div>
+    <div style={{height:4,background:"var(--bg3)"}}><div style={{height:4,background:selMod.color,width:progress+"%",transition:"width .3s"}}/></div>
+    <div className="scroll" style={{padding:"24px 20px",display:"flex",flexDirection:"column",alignItems:"center"}}>
+      <div style={{fontSize:12,color:"var(--tx3)",marginBottom:16}}>Tap card to reveal answer</div>
+
+      {/* Flip card */}
+      <div className="fc-wrap" style={{minHeight:220}}>
+        <div className={"fc"+(flipped?" flip":"")} onClick={()=>setFlipped(f=>!f)} style={{minHeight:220}}>
+          <div className="fc-face" style={{background:"var(--bg2)",minHeight:220}}>
+            <div style={{fontSize:11,fontWeight:600,color:selMod.color,letterSpacing:"0.8px",marginBottom:12}}>TERM / QUESTION</div>
+            <div style={{fontSize:17,fontWeight:600,lineHeight:1.5,color:"var(--tx)"}}>{card.f}</div>
+            <div style={{fontSize:12,color:"var(--tx3)",marginTop:12}}>tap to flip</div>
+          </div>
+          <div className="fc-face fc-back" style={{minHeight:220}}>
+            <div style={{fontSize:11,fontWeight:600,color:"var(--itx)",letterSpacing:"0.8px",marginBottom:12}}>ANSWER / DEFINITION</div>
+            <div style={{fontSize:15,lineHeight:1.6,color:"var(--tx)"}}>{card.b}</div>
+          </div>
+        </div>
+      </div>
+
+      {flipped&&<div style={{display:"flex",gap:12,marginTop:20,width:"100%",maxWidth:320}}>
+        <button onClick={()=>next(false)} style={{flex:1,padding:"13px",fontSize:15,borderRadius:14,color:"var(--dtx)",borderColor:"var(--dtx)",background:"var(--dbg)"}}>
+          <i className="ti ti-x" style={{fontSize:18,display:"block",marginBottom:3}}/>Still learning
+        </button>
+        <button onClick={()=>next(true)} style={{flex:1,padding:"13px",fontSize:15,borderRadius:14,color:"var(--stx)",borderColor:"var(--stx)",background:"var(--sbg)"}}>
+          <i className="ti ti-check" style={{fontSize:18,display:"block",marginBottom:3}}/>Got it!
+        </button>
+      </div>}
+      {!flipped&&<button onClick={()=>setFlipped(true)} style={{marginTop:20,padding:"12px 32px",fontSize:15,borderRadius:24,background:selMod.color,color:"#fff",border:"none"}}>Reveal answer</button>}
+    </div>
+    <BNav act="cards" nav={nav}/>
+  </div>;
+}
+
+/* ── MOCK EXAM SCREEN ── */
+function ExamScreen({apiKey,nav}){
+  const [phase,setPhase]=useState("intro");// intro|loading|exam|results
+  const [qs,setQs]=useState([]);const [ans,setAns]=useState({});
+  const [timeLeft,setTimeLeft]=useState(900);// 15 min
+  const [flagged,setFlagged]=useState([]);
+  const timerRef=useRef(null);
+
+  const start=async()=>{
+    setPhase("loading");
+    try{
+      const raw=await ai(apiKey,[{role:"user",content:`12 CPCM exam MCQs covering all 7 CMBOK 7th Ed. competencies (1-2 per competency). ONLY JSON: [{"q":"question","o":["A","B","C","D"],"a":0,"e":"explanation","domain":"competency name"}] 0-indexed answer. No markdown.`}]);
+      const d=pj(raw);setQs(d);setAns({});setFlagged([]);setTimeLeft(900);setPhase("exam");
+    }catch{setPhase("intro");}
+  };
+
+  useEffect(()=>{
+    if(phase==="exam"){
+      timerRef.current=setInterval(()=>{
+        setTimeLeft(t=>{if(t<=1){clearInterval(timerRef.current);setPhase("results");return 0;}return t-1;});
+      },1000);
+    }
+    return()=>clearInterval(timerRef.current);
+  },[phase]);
+
+  const submit=()=>{clearInterval(timerRef.current);setPhase("results");};
+  const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
+  const score=qs.filter((q,i)=>ans[i]===q.a).length;
+  const pct=qs.length?Math.round(score/qs.length*100):0;
+  const passed=pct>=72;
+
+  if(phase==="intro")return <div className="screen">
+    <div className="hdr"><div className="htitle">Mock Exam</div></div>
+    <div className="scroll" style={{padding:"24px 20px"}}>
+      <div style={{textAlign:"center",marginBottom:24}}>
+        <div style={{fontSize:48,marginBottom:12}}>📝</div>
+        <div style={{fontSize:20,fontWeight:700,marginBottom:6}}>CPCM Mini Mock Exam</div>
+        <div style={{fontSize:14,color:"var(--tx2)",lineHeight:1.7}}>12 questions · 15 minutes<br/>Covers all 7 CMBOK competencies<br/>Pass mark: 72%</div>
+      </div>
+      <div className="card" style={{background:"var(--ibg)",marginBottom:14}}>
+        <div style={{fontSize:13,fontWeight:600,color:"var(--itx)",marginBottom:6}}>Real exam facts</div>
+        <div style={{fontSize:13,color:"var(--itx)",lineHeight:1.7}}>• 180 questions · 4 hours · 72.2% to pass<br/>• CMBOK 7th Edition based<br/>• This mini-exam simulates real difficulty</div>
+      </div>
+      <button className="pri" onClick={start} style={{width:"100%",padding:14,fontSize:16,borderRadius:12}}>Start Mock Exam →</button>
+      <div style={{fontSize:11,color:"var(--tx3)",textAlign:"center",marginTop:10}}>Previous exam results saved on device</div>
+      {ls("cpcm_exam_results")&&(()=>{
+        const r=ls("cpcm_exam_results");
+        return <div className="card" style={{marginTop:14,textAlign:"center"}}>
+          <div style={{fontSize:12,color:"var(--tx2)",marginBottom:4}}>Last attempt</div>
+          <div style={{fontSize:22,fontWeight:700,color:r.passed?"var(--stx)":"var(--dtx)"}}>{r.pct}%</div>
+          <div style={{fontSize:12,color:"var(--tx2)"}}>{r.score}/{r.total} correct · {r.passed?"PASSED ✓":"Needs work"}</div>
+        </div>;
+      })()}
+    </div>
+    <BNav act="exam" nav={nav}/>
+  </div>;
+
+  if(phase==="loading")return <div className="screen"><div className="hdr"><div className="htitle">Mock Exam</div></div><Spin msg="Generating exam questions…"/><BNav act="exam" nav={nav}/></div>;
+
+  if(phase==="exam"){
+    const answered=Object.keys(ans).length;
+    const pctDone=Math.round(answered/qs.length*100);
+    const urgency=timeLeft<180;
+    return <div className="screen">
+      <div className="hdr" style={{gap:8}}>
+        <div className="htitle" style={{fontSize:13}}>Mock Exam</div>
+        <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+          <i className="ti ti-clock" style={{fontSize:16,color:urgency?"var(--dtx)":"var(--tx2)"}}/>
+          <span style={{fontSize:16,fontWeight:700,color:urgency?"var(--dtx)":"var(--tx)",fontVariantNumeric:"tabular-nums"}}>{fmt(timeLeft)}</span>
+        </div>
+        <button onClick={submit} className="pri" style={{padding:"6px 12px",fontSize:13,flexShrink:0}}>Submit</button>
+      </div>
+      <div style={{height:4,background:"var(--bg3)"}}><div style={{height:4,background:"var(--p)",width:pctDone+"%",transition:"width .3s"}}/></div>
+      <div className="scroll" style={{padding:"14px 14px 20px"}}>
+        <div style={{fontSize:12,color:"var(--tx2)",marginBottom:14}}>{answered}/{qs.length} answered</div>
+        {qs.map((q,qi)=>{
+          const chosen=ans[qi];const answered2=chosen!==undefined;const isFlagged=flagged.includes(qi);
+          return <div key={qi} className="card" style={{padding:"14px",marginBottom:12,borderLeft:isFlagged?"3px solid var(--wtx)":""}}>
+            <div style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:10}}>
+              <div style={{fontSize:11,background:"var(--bg2)",borderRadius:6,padding:"3px 7px",fontWeight:600,flexShrink:0}}>Q{qi+1}</div>
+              <div style={{fontSize:13,fontWeight:500,lineHeight:1.5,flex:1}}>{q.q}</div>
+              <button onClick={()=>setFlagged(f=>f.includes(qi)?f.filter(x=>x!==qi):[...f,qi])} style={{border:"none",padding:"2px 4px",color:isFlagged?"var(--wtx)":"var(--tx3)",flexShrink:0}}>
+                <i className={"ti ti-flag"+(isFlagged?"-filled":"")} style={{fontSize:16}}/>
+              </button>
+            </div>
+            {q.o.map((opt,oi)=>(
+              <div key={oi} onClick={()=>setAns(a=>({...a,[qi]:oi}))} className="orow" style={{background:chosen===oi?"var(--ibg)":"transparent",color:chosen===oi?"var(--itx)":"var(--tx2)",borderColor:chosen===oi?"var(--itx)":"var(--bd)"}}>
+                <span style={{fontWeight:700,flexShrink:0}}>{String.fromCharCode(65+oi)}.</span>{opt}
+              </div>
+            ))}
+          </div>;
+        })}
+        <button onClick={submit} className="pri" style={{width:"100%",padding:13,fontSize:15,borderRadius:12,marginTop:8}}>Submit Exam</button>
+      </div>
+    </div>;
+  }
+
+  if(phase==="results"){
+    // Save result
+    useEffect(()=>{ss("cpcm_exam_results",{pct,score,total:qs.length,passed,date:new Date().toLocaleDateString()});},[]);
+    const byDomain={};qs.forEach((q,i)=>{const d=q.domain||"General";if(!byDomain[d])byDomain[d]={total:0,correct:0};byDomain[d].total++;if(ans[i]===q.a)byDomain[d].correct++;});
+    return <div className="screen">
+      <div className="hdr"><div className="htitle">Exam Results</div><button onClick={()=>setPhase("intro")} style={{fontSize:12,padding:"4px 10px"}}>Done</button></div>
+      <div className="scroll" style={{padding:"20px 16px 30px"}}>
+        <div style={{textAlign:"center",padding:"24px 0",marginBottom:16}}>
+          <div style={{fontSize:56,fontWeight:800,color:passed?"var(--stx)":"var(--dtx)",marginBottom:6}}>{pct}%</div>
+          <div style={{fontSize:18,fontWeight:600,marginBottom:4}}>{passed?"PASSED ✓":"Needs more study"}</div>
+          <div style={{fontSize:14,color:"var(--tx2)"}}>{score} of {qs.length} correct · Pass mark 72%</div>
+        </div>
+        <div className="card" style={{background:passed?"var(--sbg)":"var(--dbg)",border:"none",textAlign:"center",marginBottom:14}}>
+          <div style={{fontSize:13,color:passed?"var(--stx)":"var(--dtx)",lineHeight:1.6}}>{passed?"Great work! Keep reviewing weak areas before the real exam.":"Focus on the domains below and retake the exam. You're building momentum!"}</div>
+        </div>
+        <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",marginBottom:10}}>RESULTS BY DOMAIN</div>
+        {Object.entries(byDomain).map(([d,r])=>(
+          <div key={d} className="card" style={{padding:"11px 13px",marginBottom:8}}>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+              <span style={{fontSize:13,fontWeight:500}}>{d}</span>
+              <span style={{fontSize:13,fontWeight:600,color:r.correct/r.total>=0.72?"var(--stx)":"var(--dtx)"}}>{r.correct}/{r.total}</span>
+            </div>
+            <div className="btr"><div className="bfl" style={{width:(r.correct/r.total*100)+"%",background:r.correct/r.total>=0.72?"var(--pg)":"var(--dtx)"}}/></div>
+          </div>
+        ))}
+        <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",margin:"16px 0 10px"}}>QUESTION REVIEW</div>
+        {qs.map((q,qi)=>{
+          const correct=ans[qi]===q.a;
+          return <div key={qi} className="card" style={{marginBottom:10,padding:"12px 13px",borderLeft:`3px solid ${correct?"var(--stx)":"var(--dtx)"}`}}>
+            <div style={{fontSize:11,fontWeight:600,color:correct?"var(--stx)":"var(--dtx)",marginBottom:5}}>{correct?"✓ Correct":"✗ Wrong"} · Q{qi+1}</div>
+            <div style={{fontSize:13,marginBottom:6,lineHeight:1.4}}>{q.q}</div>
+            <div style={{fontSize:12,color:"var(--stx)",marginBottom:4}}>✓ {q.o[q.a]}</div>
+            {!correct&&ans[qi]!==undefined&&<div style={{fontSize:12,color:"var(--dtx)",marginBottom:4}}>✗ You chose: {q.o[ans[qi]]}</div>}
+            <div style={{fontSize:12,color:"var(--tx2)",lineHeight:1.5,marginTop:6,padding:"8px",background:"var(--bg2)",borderRadius:8}}>{q.e}</div>
+          </div>;
+        })}
+        <button className="pri" onClick={()=>{setPhase("intro");setQs([]);setAns({});}} style={{width:"100%",padding:13,fontSize:15,borderRadius:12,marginTop:8}}>Take another exam</button>
+      </div>
+      <BNav act="exam" nav={nav}/>
+    </div>;
+  }
+}
+
+/* ── TUTOR SCREEN ── */
+function TutorScreen({apiKey,nav}){
+  const [chat,setChat]=useState([{r:"a",c:"Hi! I'm your CPCM tutor. Ask me anything about CMBOK 7th Edition — contract types, legal principles, exam strategy, or any topic you're studying."}]);
+  const [inp,setInp]=useState("");const [ld,setLd]=useState(false);const endRef=useRef(null);
+  const sug=["Difference between FFP and CPFF?","5 elements of contract formation","How does the Contract Disputes Act work?","LPTA vs best-value source selection","What is Earned Value Management?","Category Management in CMBOK 7th?","Allowable costs under FAR Part 31?","Constructive vs written change order"];
+  useEffect(()=>endRef.current?.scrollIntoView({behavior:"smooth"}),[chat]);
+  const send=async(m)=>{
+    const msg=(m||inp).trim();if(!msg||ld)return;
+    setInp("");const nc=[...chat,{r:"u",c:msg}];setChat(nc);setLd(true);
+    try{const txt=await ai(apiKey,nc.map(x=>({role:x.r==="u"?"user":"assistant",content:x.c})),"You are a CPCM exam tutor. Be accurate to CMBOK 7th Edition. Concise (under 180 words). Reference sections when helpful.");setChat(p=>[...p,{r:"a",c:txt}]);}
+    catch(e){setChat(p=>[...p,{r:"a",c:"Error: "+e.message}]);}setLd(false);
+  };
+  return <div className="screen">
+    <div className="hdr"><div className="htitle">AI Tutor</div><span style={{fontSize:12,color:"var(--tx2)"}}>CMBOK 7th Ed.</span></div>
+    <div className="scroll" style={{padding:"10px 12px",display:"flex",flexDirection:"column",gap:2}}>
+      {chat.map((msg,i)=>(
+        <div key={i} style={{display:"flex",gap:8,marginBottom:8,flexDirection:msg.r==="u"?"row-reverse":"row",alignItems:"flex-end"}}>
+          {msg.r==="a"&&<div style={{width:30,height:30,borderRadius:"50%",background:"var(--ibg)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><i className="ti ti-robot" style={{fontSize:16,color:"var(--itx)"}}/></div>}
+          <div className={"bub "+(msg.r==="u"?"u":"a")}>{msg.c}</div>
+        </div>
+      ))}
+      {ld&&<div style={{display:"flex",gap:8,alignItems:"flex-end"}}><div style={{width:30,height:30,borderRadius:"50%",background:"var(--ibg)",display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-robot" style={{fontSize:16,color:"var(--itx)"}}/></div><div className="bub a">Thinking…</div></div>}
+      {chat.length===1&&!ld&&<div style={{marginTop:8}}><div style={{fontSize:12,color:"var(--tx2)",marginBottom:8}}>Suggested questions:</div>{sug.map((s,i)=><div key={i} onClick={()=>send(s)} style={{fontSize:14,padding:"10px 13px",border:"1px solid var(--bd)",borderRadius:11,marginBottom:7,cursor:"pointer",color:"var(--tx2)"}}>{s}</div>)}</div>}
+      <div ref={endRef}/>
+    </div>
+    <div style={{padding:"10px 12px",paddingBottom:"calc(10px + var(--safe-b))",borderTop:"1px solid var(--bd)",display:"flex",gap:9,flexShrink:0}}>
+      <input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&send()} placeholder="Ask about any CMBOK topic…" style={{borderRadius:22}}/>
+      <button onClick={()=>send()} disabled={ld||!inp.trim()} className="pri" style={{padding:"10px 15px",borderRadius:22,flexShrink:0}}><i className="ti ti-send" style={{fontSize:19}}/></button>
+    </div>
+    <BNav act="tutor" nav={nav}/>
+  </div>;
+}
+
+/* ── SETTINGS SCREEN ── */
+function SettingsScreen({apiKey,onKey,nav}){
+  const [k,setK]=useState(apiKey||"");const [saved,setSaved]=useState(false);
+  const [cpeLog,setCpeLog]=useState(()=>ls("cpcm_cpe")||[]);
+  const [newHours,setNewHours]=useState("");const [newCat,setNewCat]=useState("Webinar");const [newDesc,setNewDesc]=useState("");
+  const totalCPE=cpeLog.reduce((a,c)=>a+(c.hours||0),0);
+  const examDate=ls("cpcm_exam_date")||"";
+
+  const save=()=>{const key=k.trim();if(key){onKey(key);ss("cpcm_key",key);setSaved(true);setTimeout(()=>setSaved(false),2000);}};
+  const addCPE=()=>{
+    if(!newHours||isNaN(newHours))return;
+    const entry={id:Date.now(),hours:parseFloat(newHours),cat:newCat,desc:newDesc,date:new Date().toLocaleDateString()};
+    const updated=[...cpeLog,entry];setCpeLog(updated);ss("cpcm_cpe",updated);
+    setNewHours("");setNewDesc("");
+  };
+  const delCPE=(id)=>{const updated=cpeLog.filter(c=>c.id!==id);setCpeLog(updated);ss("cpcm_cpe",updated);};
+  const clearAll=()=>{if(confirm("Clear all progress and cached lessons?")){Object.keys(localStorage).filter(k=>k.startsWith("lc:")||k==="cpcm_progress"||k==="cpcm_streak").forEach(k=>localStorage.removeItem(k));location.reload();}};
+
+  const cats=["Webinar","Workshop/Seminar","Online Course","NCMA Prep Course","Article/Publication","Mentoring","Conference","Other"];
+  const catColors={"Webinar":"#185FA5","Workshop/Seminar":"#3B6D11","Online Course":"#533489","NCMA Prep Course":"#993C1D","Article/Publication":"#854F0B","Mentoring":"#0F6E56","Conference":"#5F5E5A","Other":"#888"};
+
+  return <div className="screen">
+    <div className="hdr"><div className="htitle">Settings</div></div>
+    <div className="scroll" style={{padding:"14px 14px 40px"}}>
+
+      {/* CPE TRACKER */}
+      <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",marginBottom:10}}>CPE TRACKER</div>
+      <div className="card" style={{marginBottom:14}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+          <span style={{fontSize:14,fontWeight:600}}>Hours logged</span>
+          <span style={{fontSize:18,fontWeight:700,color:totalCPE>=120?"var(--stx)":"var(--p)"}}>{Math.round(totalCPE*10)/10} / 120</span>
+        </div>
+        <div className="btr" style={{marginBottom:6}}>
+          <div className="bfl" style={{width:Math.min(100,totalCPE/120*100)+"%",background:totalCPE>=120?"var(--pg)":"var(--p)"}}/>
+        </div>
+        <div style={{fontSize:11,color:"var(--tx2)"}}>{Math.max(0,120-totalCPE).toFixed(1)} hours remaining to reach 120</div>
+      </div>
+
+      {/* Log new CPE */}
+      <div className="card" style={{marginBottom:14}}>
+        <div style={{fontSize:13,fontWeight:600,marginBottom:10}}>Log CPE hours</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+          <input type="number" placeholder="Hours (e.g. 2)" value={newHours} onChange={e=>setNewHours(e.target.value)} style={{fontSize:14}}/>
+          <select value={newCat} onChange={e=>setNewCat(e.target.value)}>
+            {cats.map(c=><option key={c}>{c}</option>)}
+          </select>
+        </div>
+        <input placeholder="Description (optional)" value={newDesc} onChange={e=>setNewDesc(e.target.value)} style={{marginBottom:8,fontSize:14}}/>
+        <button className="pri" onClick={addCPE} style={{width:"100%",padding:10,fontSize:14,borderRadius:9}}>+ Add CPE Hours</button>
+      </div>
+
+      {/* CPE log */}
+      {cpeLog.length>0&&<div className="card" style={{marginBottom:14}}>
+        <div style={{fontSize:13,fontWeight:600,marginBottom:10}}>Activity log</div>
+        {[...cpeLog].reverse().map(c=>(
+          <div key={c.id} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 0",borderBottom:"1px solid var(--bd)"}}>
+            <div style={{width:6,height:6,borderRadius:"50%",background:catColors[c.cat]||"var(--tx3)",flexShrink:0}}/>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:13,fontWeight:500}}>{c.hours}h · {c.cat}</div>
+              {c.desc&&<div style={{fontSize:11,color:"var(--tx2)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.desc}</div>}
+              <div style={{fontSize:11,color:"var(--tx3)"}}>{c.date}</div>
+            </div>
+            <button onClick={()=>delCPE(c.id)} style={{border:"none",padding:"4px",color:"var(--tx3)"}}><i className="ti ti-trash" style={{fontSize:16}}/></button>
+          </div>
+        ))}
+      </div>}
+
+      {/* Exam date */}
+      <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",margin:"4px 0 10px"}}>EXAM DATE</div>
+      <div className="card" style={{marginBottom:14}}>
+        <div style={{fontSize:13,color:"var(--tx2)",marginBottom:8}}>Set your target exam date for the countdown timer.</div>
+        <input type="date" defaultValue={examDate} onChange={e=>ss("cpcm_exam_date",e.target.value)} style={{fontSize:14}}/>
+      </div>
+
+      {/* API Key */}
+      <div style={{fontSize:11,fontWeight:600,color:"var(--tx3)",letterSpacing:"0.8px",margin:"4px 0 10px"}}>API KEY</div>
+      <div className="card" style={{marginBottom:14}}>
+        <div style={{fontSize:12,color:"var(--tx2)",marginBottom:8}}>Get key at <strong>console.anthropic.com</strong></div>
+        <input type="password" value={k} onChange={e=>setK(e.target.value)} placeholder="sk-ant-api03-…"/>
+        <button onClick={save} style={{marginTop:10,width:"100%",padding:11,background:saved?"var(--pg)":"var(--p)",color:"#fff",borderColor:"transparent",borderRadius:9,fontSize:14}}>{saved?"✓ Saved":"Update Key"}</button>
+      </div>
+
+      {/* Add to home screen */}
+      <div className="card" style={{background:"var(--ibg)",marginBottom:14}}>
+        <div style={{fontSize:13,fontWeight:600,color:"var(--itx)",marginBottom:6}}>📱 Add to Home Screen</div>
+        <div style={{fontSize:13,color:"var(--itx)",lineHeight:1.7}}><strong>iPhone:</strong> Share → Add to Home Screen<br/><strong>Android:</strong> ⋮ Menu → Add to Home Screen</div>
+      </div>
+
+      {/* Clear data */}
+      <div className="card">
+        <button onClick={clearAll} style={{color:"var(--dtx)",borderColor:"var(--dtx)",width:"100%",padding:11,fontSize:14}}>Clear all progress & cache</button>
+      </div>
+    </div>
+    <BNav act="settings" nav={nav}/>
+  </div>;
+}
+
+/* ── APP ── */
+function App(){
+  const [key,setKey]=useState(()=>ls("cpcm_key")||"");
+  const [stk,setStk]=useState([{s:"home"}]);
+  const [prog,setProg]=useState(()=>ls("cpcm_progress")||{});
+  if(!key)return <KeyScreen onSave={k=>{ss("cpcm_key",k);setKey(k);}}/>;
+  const cur=stk[stk.length-1];
+  const push=s=>setStk(p=>[...p,s]);
+  const pop=()=>setStk(p=>p.length>1?p.slice(0,-1):p);
+  const nav=s=>setStk([{s:"home"},{s}].filter((_,i)=>i===0||s!=="home"));
+  const markDone=id=>{const p={...prog,[id]:true};setProg(p);ss("cpcm_progress",p);};
+  if(cur.s==="home")return <HomeScreen prog={prog} onMod={m=>push({s:"mod",mod:m})} nav={n=>n==="home"?setStk([{s:"home"}]):push({s:n})} apiKey={key}/>;
+  if(cur.s==="mod")return <ModScreen mod={cur.mod} prog={prog} onL={(l,m)=>push({s:"lsn",lesson:l,mod:m})} onBack={pop} nav={n=>n==="home"?setStk([{s:"home"}]):push({s:n})}/>;
+  if(cur.s==="lsn")return <LsnScreen lesson={cur.lesson} mod={cur.mod} apiKey={key} prog={prog} onDone={()=>markDone(cur.lesson.id)} onBack={pop} nav={n=>n==="home"?setStk([{s:"home"}]):push({s:n})}/>;
+  if(cur.s==="cards")return <CardsScreen apiKey={key} nav={n=>n==="home"?setStk([{s:"home"}]):setStk([{s:"home"},{s:n}])}/>;
+  if(cur.s==="exam")return <ExamScreen apiKey={key} nav={n=>n==="home"?setStk([{s:"home"}]):setStk([{s:"home"},{s:n}])}/>;
+  if(cur.s==="tutor")return <TutorScreen apiKey={key} nav={n=>n==="home"?setStk([{s:"home"}]):setStk([{s:"home"},{s:n}])}/>;
+  if(cur.s==="settings")return <SettingsScreen apiKey={key} onKey={setKey} nav={n=>n==="home"?setStk([{s:"home"}]):setStk([{s:"home"},{s:n}])}/>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
